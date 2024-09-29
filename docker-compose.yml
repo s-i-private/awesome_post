@@ -1,0 +1,20 @@
+version: "3.8"
+
+x-rails_base: &rails_base
+  build:
+    context: .
+    dockerfile: docker/backend/Dockerfile/Dockerfile
+  image: awesome_post/backend-dev:1.0.0
+  platform: linux/x86_64
+  tty: true
+  stdin_open: true
+
+services:
+  awesome_post_backend:
+    <<: *rails_base
+    container_name: awesome_post_backend
+    volumes:
+      - ./backend:/awesome_post
+    ports:
+      - 33000:3000 # デバッグ用にポートフォワーディングしています
+    command: "bundle exec rails s -b 0.0.0.0"

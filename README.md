@@ -3,8 +3,13 @@
 # environment setup
 ## backend
 ```sh
+touch backend/tmp/caching-dev.txt
+cp docker/development/nginx/.env.sample docker/development/nginx/.env
+cp docker/development/backend/.env.sample docker/development/backend/.env
+
 docker compose build awesome_post_backend
 docker compose run --rm awesome_post_backend bundle install
+docker compose build eagle
 docker compose up -d
 ```
 ## frontend

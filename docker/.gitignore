@@ -1,0 +1,7 @@
+# ========== development ==========
+# env files
+*/**/.env
+
+# ssl certfile
+/nginx/ssl/*
+!/nginx/ssl/.keep

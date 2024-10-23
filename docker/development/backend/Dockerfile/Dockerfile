@@ -14,5 +14,5 @@ RUN gem uninstall bundler && gem install bundler -v '2.3.13'
 ENV BUNDLE_PATH=/awesome_post/vendor/bundle
 
 # start process for development
-# ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "/entrypoint.sh" ]
 CMD ["bash"]

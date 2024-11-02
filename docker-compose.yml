@@ -17,6 +17,7 @@ services:
       context: .
       dockerfile: docker/development/nginx/Dockerfile/Dockerfile
     image: awesome_post/nginx-dev:1.0.0
+    container_name: awesome_post
     env_file:
       - docker/development/nginx/.env
     volumes:
@@ -45,7 +46,7 @@ services:
   mysql:
     image: mysql:8.0.39
     platform: linux/x86_64
-    container_name: mysql
+    container_name: awesome_post_mysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - LANG=C.UTF-8
@@ -61,7 +62,7 @@ services:
   redis:
     image: redis:6.2.4-alpine
     platform: linux/x86_64
-    container_name: redis
+    container_name: awesome_post_redis
     environment:
       - LANG=C.UTF-8
     volumes:
@@ -74,7 +75,7 @@ services:
   mailhog:
     image: mailhog/mailhog:v1.0.1
     platform: linux/x86_64
-    container_name: mailhog
+    container_name: awesome_post_mailhog
     environment:
       - LANG=C.UTF-8
       - TZ=Asia/Tokyo

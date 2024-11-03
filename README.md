@@ -9,7 +9,7 @@ cp docker/development/backend/.env.sample docker/development/backend/.env
 
 docker compose build awesome_post_backend
 docker compose run --rm awesome_post_backend bundle install
-docker compose build eagle
+docker compose build awesome_post
 docker compose up -d
 ```
 ## frontend

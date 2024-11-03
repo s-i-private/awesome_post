@@ -44,28 +44,28 @@ else
 fi
 
 # awesome_post_backend health check
-echo 'Waiting for awesome_post_backend ...'
-count=1
-result=0
-while [ $result -eq 0 ]; do
-  if [ $count -gt 150 ]; then
-    echo 'XXXXXXXXXX awesome_post_backend is unhealthy.'
-    exit 1
-  fi
+# echo 'Waiting for awesome_post_backend ...'
+# count=1
+# result=0
+# while [ $result -eq 0 ]; do
+#   if [ $count -gt 150 ]; then
+#     echo 'XXXXXXXXXX awesome_post_backend is unhealthy.'
+#     exit 1
+#   fi
 
-  echo "********** Health check for awesome_post_backend: $count th try **********"
+#   echo "********** Health check for awesome_post_backend: $count th try **********"
 
-  status=$(curl -if http://$AWESOME_POST_BACKEND_HOST:$AWESOME_POST_BACKEND_PORT | awk 'NR==1{ print $2}')
-  if [ "$status" = '204' ]; then
-    result=1
-    break;
-  fi
+#   status=$(curl -if http://$AWESOME_POST_BACKEND_HOST:$AWESOME_POST_BACKEND_PORT | awk 'NR==1{ print $2}')
+#   if [ "$status" = '204' ]; then
+#     result=1
+#     break;
+#   fi
 
-  sleep 1
+#   sleep 1
 
-  count=$((++count))
-done
+#   count=$((++count))
+# done
 
-echo "AWESOME_POST_backend $AWESOME_POST_BACKEND_HOST:$AWESOME_POST_BACKEND_PORT is healthy."
+# echo "AWESOME_POST_backend $AWESOME_POST_BACKEND_HOST:$AWESOME_POST_BACKEND_PORT is healthy."
 
 exec "$@"

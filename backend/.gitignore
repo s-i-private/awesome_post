@@ -22,6 +22,9 @@
 !/tmp/pids/
 !/tmp/pids/.keep
 
+# Ignore installed libraries.
+/vendor/bundle
+
 # Ignore storage (uploaded files in development and any SQLite databases).
 /storage/*
 !/storage/.keep

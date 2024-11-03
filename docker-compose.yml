@@ -1,0 +1,96 @@
+version: "3.8"
+
+x-rails_base: &rails_base
+  build:
+    context: .
+    dockerfile: docker/development/backend/Dockerfile/Dockerfile
+  image: awesome_post/backend-dev:1.0.0
+  platform: linux/x86_64
+  env_file:
+    - docker/development/backend/.env
+  tty: true
+  stdin_open: true
+
+services:
+  awesome_post:
+    build:
+      context: .
+      dockerfile: docker/development/nginx/Dockerfile/Dockerfile
+    image: awesome_post/nginx-dev:1.0.0
+    container_name: awesome_post
+    env_file:
+      - docker/development/nginx/.env
+    volumes:
+      - ./docker/development/nginx:/awesome_post
+      - ./frontend/out:/awesome_post_frontend/out
+    ports:
+      - 4433:443
+    tty: true
+    stdin_open: true
+    command: [ "nginx-debug", "-g", "daemon off;" ]
+
+  awesome_post_backend:
+    <<: *rails_base
+    container_name: awesome_post_backend
+    volumes:
+      - ./backend:/awesome_post
+      - ./docker/development/backend/entrypoint.sh:/entrypoint.sh
+    depends_on:
+      - mysql
+      - redis
+      - mailhog
+    ports:
+      - 33000:3000 # デバッグ用にポートフォワーディングしています
+    command: "bundle exec rails s -b 0.0.0.0"
+
+  mysql:
+    image: mysql:8.0.39
+    platform: linux/x86_64
+    container_name: awesome_post_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - LANG=C.UTF-8
+      - TZ=Asia/Tokyo
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/development/mysql/charactor.cnf:/etc/mysql/conf.d/charactor.cnf
+    ports:
+      - 33306:3306 # デバッグ用にポートフォワーディングしています
+    tty: true
+    stdin_open: true
+
+  redis:
+    image: redis:6.2.4-alpine
+    platform: linux/x86_64
+    container_name: awesome_post_redis
+    environment:
+      - LANG=C.UTF-8
+    volumes:
+      - redis_data:/data
+    ports:
+      - 63799:6379 # デバッグ用にポートフォワーディングしています
+    tty: true
+    stdin_open: true
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    platform: linux/x86_64
+    container_name: awesome_post_mailhog
+    environment:
+      - LANG=C.UTF-8
+      - TZ=Asia/Tokyo
+    ports:
+      - 11025:1025 # smtp デバッグ用にポートフォワーディングしています
+      - 18025:8025 # http
+    volumes:
+      - mailhog_data:/mailhog_data
+    user: root # ref: https://github.com/mailhog/MailHog/issues/101#issuecomment-533198310
+    command: ["-storage=maildir", "-maildir-path=/mailhog_data"]
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  mailhog_data:
+    driver: local
